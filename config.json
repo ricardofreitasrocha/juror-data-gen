@@ -1,0 +1,17 @@
+{
+  "reset": true,
+  "location_code": ["415"],
+  "pools": 5,
+  "voters": 1000,
+  "voters_per_pool": 60,
+  "summon": true,
+  "add_responses": true,
+  "ranges": {
+    "responded": 0.6,
+    "excused": 0.1,
+    "deferred": 0.1,
+    "disqualified": 0.1,
+    "undeliverable": 0.1
+  },
+  "days_to_add": 0
+}
