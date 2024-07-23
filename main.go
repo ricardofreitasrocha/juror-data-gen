@@ -12,25 +12,34 @@ var (
 	_config string
 )
 
-type Ranges struct {
-	Responded     float32 `json:"responded"`
-	Excused       float32 `json:"excused"`
-	Deferred      float32 `json:"deferred"`
-	Disqualified  float32 `json:"disqualified"`
-	Undeliverable float32 `json:"undeliverable"`
-}
+type (
+	Ranges struct {
+		Responded     float32 `json:"responded"`
+		Excused       float32 `json:"excused"`
+		Deferred      float32 `json:"deferred"`
+		Disqualified  float32 `json:"disqualified"`
+		Undeliverable float32 `json:"undeliverable"`
+	}
 
-type Config struct {
-	LocCode       []string `json:"location_code"`
-	Pools         int      `json:"pools"`
-	Voters        int      `json:"voters"`
-	Reset         bool     `json:"reset"`
-	VotersPerPool int      `json:"voters_per_pool"`
-	Summon        bool     `json:"summon"`
-	AddResponses  bool     `json:"add_responses"`
-	DaysToAdd     int      `json:"days_to_add"`
-	Ranges        Ranges   `json:"ranges"`
-}
+	Trials struct {
+		Rooms  int `json:"rooms"`
+		Judges int `json:"judges"`
+		Total  int `json:"total"`
+	}
+
+	Config struct {
+		LocCode       []string `json:"location_code"`
+		Pools         int      `json:"pools"`
+		Voters        int      `json:"voters"`
+		Reset         bool     `json:"reset"`
+		VotersPerPool int      `json:"voters_per_pool"`
+		Summon        bool     `json:"summon"`
+		AddResponses  bool     `json:"add_responses"`
+		DaysToAdd     int      `json:"days_to_add"`
+		Ranges        Ranges   `json:"ranges"`
+		Trials        Trials   `json:"trials"`
+	}
+)
 
 func main() {
 	flag.StringVar(&_config, "c", "", "Use a config file")
@@ -90,4 +99,10 @@ func main() {
 		s := summon(db.db, &config)
 		s.summon()
 	}
+
+	// always try to create rooms and judges
+	t := trials(db.db, &config)
+	t.rooms()
+	t.judges()
+	t.createTrials()
 }

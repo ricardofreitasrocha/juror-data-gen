@@ -19,6 +19,20 @@ func TestMakeToken(t *testing.T) {
 	}
 }
 
+func TestMakeAdminToken(t *testing.T) {
+	token, _ := makeToken("415", true, "ADMIN")
+
+	if token == "" {
+		t.Errorf("Expected token to be generated")
+	}
+
+	parts := strings.Split(token, ".")
+
+	if len(parts) != 3 {
+		t.Errorf("Expected token to have 3 parts")
+	}
+}
+
 func TestBureauJwt(t *testing.T) {
 	claims := Claims{}
 	bureauJwt(&claims)

@@ -59,16 +59,64 @@ DELETE FROM juror_mod.pending_juror;
 DELETE FROM juror_mod.welsh_court_location where loc_code in ('001', '002', '003');
 DELETE FROM juror_mod.court_location where loc_code in ('001', '002', '003');
 
-
 -- set app settings
 INSERT INTO juror_mod.APP_SETTING (SETTING, VALUE) VALUES ('SLA_OVERDUE_DAYS', '10');
 INSERT INTO juror_mod.APP_SETTING (SETTING, VALUE) VALUES ('URGENCY_DAYS', '10');
 
-INSERT INTO juror_mod.expense_rates(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers,
-                                    rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers,
-                                    rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike,
-                                    limit_financial_loss_half_day, limit_financial_loss_full_day,
-                                    limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial,
-                                    rate_subsistence_standard, rate_subsistence_long_day)
-values (1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
-       (2, 0.314, 0.356, 0.398, 0.314, 0.324, 0.096, 32.47, 64.95, 64.95, 129.91, 5.71, 12.17);
+
+-- expenses things
+DELETE FROM juror_mod.app_setting where setting = 'PAYMENT_AUTH_CODE';
+DELETE FROM juror_mod.payment_data;
+
+INSERT INTO juror_mod.app_setting (setting, value) VALUES ('PAYMENT_AUTH_CODE', 'testValue');
+
+INSERT INTO juror_mod.rev_info (revision_number, revision_timestamp, changed_by) VALUES(0, 1713272656536, NULL);
+
+INSERT INTO juror_mod.court_location_audit (revision, rev_type, loc_code, public_transport_soft_limit, taxi_soft_limit)
+VALUES (0, 0, '415', 10.00000, 10.00000);
+
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(2, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 40.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(3, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 40.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(4, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 32.47000, 40.00000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(5, 0.31500, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 32.47000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(6, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 40.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(7, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 20.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(8, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 50.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(9, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 50.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(10, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 70.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(11, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 90.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(12, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 37.45000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(13, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 38.45000, 65.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(14, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 37.45000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(15, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 50.00000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);
+INSERT INTO juror_mod.expense_rates
+(id, rate_per_mile_car_0_passengers, rate_per_mile_car_1_passengers, rate_per_mile_car_2_or_more_passengers, rate_per_mile_motorcycle_0_passengers, rate_per_mile_motorcycle_1_or_more_passengers, rate_per_mile_bike, limit_financial_loss_half_day, limit_financial_loss_full_day, limit_financial_loss_half_day_long_trial, limit_financial_loss_full_day_long_trial, rate_subsistence_standard, rate_subsistence_long_day)
+VALUES(16, 0.31400, 0.35600, 0.39800, 0.31400, 0.32400, 0.09600, 37.45000, 64.95000, 64.95000, 129.91000, 5.71000, 12.17000);

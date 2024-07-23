@@ -26,12 +26,18 @@ type Claims struct {
 	LocCode string `json:"locCode"`
 }
 
-func makeToken(locCode string, bureau bool) (string, error) {
+func makeToken(locCode string, bureau bool, options ...interface{}) (string, error) {
 	claims := Claims{
 		UserLevel:       "1",
 		DaysToExpire:    999,
 		PasswordWarning: false,
 		Roles:           []string{"MANAGER"},
+	}
+
+	if len(options) > 0 {
+		if options[0] == "ADMIN" {
+			claims.Roles[0] = "ADMIN"
+		}
 	}
 
 	if bureau {
