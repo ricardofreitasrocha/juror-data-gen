@@ -11,9 +11,10 @@ import (
 )
 
 type Voters struct {
-	db      *sql.DB
-	locCode string
-	count   int
+	db       *sql.DB
+	locCode  string
+	count    int
+	postcode string
 }
 
 type Person struct {
@@ -36,11 +37,12 @@ type Results struct {
 	Results []Person `json:"results"`
 }
 
-func voters(db *sql.DB, locCode string, count int) *Voters {
+func voters(db *sql.DB, locCode string, count int, postcode string) *Voters {
 	return &Voters{
-		db:      db,
-		locCode: locCode,
-		count:   count,
+		db:       db,
+		locCode:  locCode,
+		count:    count,
+		postcode: postcode,
 	}
 }
 
@@ -59,10 +61,10 @@ func (v *Voters) insert() {
 		street := person.Location.Street.Name
 		city := person.Location.City
 
-		postcode := "CH1 2AN"
+		// postcode := "CH1 2AN"
 		jn := jurorNumber("0"+v.locCode, strconv.Itoa(i))
 
-		query := fmt.Sprintf("INSERT INTO juror_mod.VOTERS (LOC_CODE,PART_NO,REGISTER_LETT,POLL_NUMBER,NEW_MARKER,TITLE,LNAME,FNAME,ADDRESS,ADDRESS4,ZIP,REC_NUM) VALUES ('%s','%s','%d','%d',NULL,'%s','%s','%s','%s','%s','%s',%d);", v.locCode, jn, i, i, title, first, last, street, city, postcode, i)
+		query := fmt.Sprintf("INSERT INTO juror_mod.VOTERS (LOC_CODE,PART_NO,REGISTER_LETT,POLL_NUMBER,NEW_MARKER,TITLE,LNAME,FNAME,ADDRESS,ADDRESS4,ZIP,REC_NUM) VALUES ('%s','%s','%d','%d',NULL,'%s','%s','%s','%s','%s','%s',%d);", v.locCode, jn, i, i, title, first, last, street, city, v.postcode, i)
 
 		log.Infof("Inserting voter %s", jn)
 

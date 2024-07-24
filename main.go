@@ -28,16 +28,17 @@ type (
 	}
 
 	Config struct {
-		LocCode       []string `json:"location_code"`
-		Pools         int      `json:"pools"`
-		Voters        int      `json:"voters"`
-		Reset         bool     `json:"reset"`
-		VotersPerPool int      `json:"voters_per_pool"`
-		Summon        bool     `json:"summon"`
-		AddResponses  bool     `json:"add_responses"`
-		DaysToAdd     int      `json:"days_to_add"`
-		Ranges        Ranges   `json:"ranges"`
-		Trials        Trials   `json:"trials"`
+		LocCode       []string          `json:"location_code"`
+		PostCodes     map[string]string `json:"postcodes"`
+		Pools         int               `json:"pools"`
+		Voters        int               `json:"voters"`
+		Reset         bool              `json:"reset"`
+		VotersPerPool int               `json:"voters_per_pool"`
+		Summon        bool              `json:"summon"`
+		AddResponses  bool              `json:"add_responses"`
+		DaysToAdd     int               `json:"days_to_add"`
+		Ranges        Ranges            `json:"ranges"`
+		Trials        Trials            `json:"trials"`
 	}
 )
 
@@ -73,11 +74,6 @@ func main() {
 	config := Config{}
 	json.Unmarshal(c, &config)
 
-	if len(config.LocCode) > 1 {
-		log.Error("Only one location code is allowed for now")
-		return
-	}
-
 	if len(config.LocCode[0]) != 3 {
 		log.Error("Location code must be 3 characters")
 		return
@@ -86,8 +82,10 @@ func main() {
 	db := New(config.Reset)
 
 	if config.Voters > 0 {
-		v := voters(db.db, config.LocCode[0], config.Voters)
-		v.insert()
+		for _, locCode := range config.LocCode {
+			v := voters(db.db, locCode, config.Voters, config.PostCodes[locCode])
+			v.insert()
+		}
 	}
 
 	if config.Pools > 0 {

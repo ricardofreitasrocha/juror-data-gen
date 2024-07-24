@@ -1,11 +1,16 @@
 {
   "reset": true,
-  "location_code": ["415"],
+  "location_code": ["415", "462"],
+  "postcodes": {
+    "415": "CH1 2AN",
+    "462": "WA1 2AN"
+  },
+  "days_to_add": 0,
   "pools": 5,
-  "voters": 0,
-  "voters_per_pool": 0,
-  "summon": false,
-  "add_responses": false,
+  "voters": 500,
+  "voters_per_pool": 20,
+  "summon": true,
+  "add_responses": true,
   "ranges": {
     "responded": 1.0,
     "excused": 0.0,
@@ -13,10 +18,9 @@
     "disqualified": 0.0,
     "undeliverable": 0.0
   },
-  "days_to_add": 5,
   "trials": {
     "rooms": 5,
     "judges": 1,
-    "total": 55
+    "total": 5
   }
 }
