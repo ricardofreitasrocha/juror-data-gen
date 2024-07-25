@@ -64,7 +64,7 @@ func (v *Voters) insert() {
 		// postcode := "CH1 2AN"
 		jn := jurorNumber("0"+v.locCode, strconv.Itoa(i))
 
-		query := fmt.Sprintf("INSERT INTO juror_mod.VOTERS (LOC_CODE,PART_NO,REGISTER_LETT,POLL_NUMBER,NEW_MARKER,TITLE,LNAME,FNAME,ADDRESS,ADDRESS4,ZIP,REC_NUM) VALUES ('%s','%s','%d','%d',NULL,'%s','%s','%s','%s','%s','%s',%d);", v.locCode, jn, i, i, title, first, last, street, city, v.postcode, i)
+		query := fmt.Sprintf("INSERT INTO juror_mod.VOTERS (LOC_CODE,PART_NO,REGISTER_LETT,POLL_NUMBER,NEW_MARKER,TITLE,FNAME,LNAME,ADDRESS,ADDRESS4,ZIP,REC_NUM) VALUES ('%s','%s','%d','%d',NULL,'%s','%s','%s','%s','%s','%s',%d);", v.locCode, jn, i, i, title, first, last, street, city, v.postcode, i)
 
 		log.Infof("Inserting voter %s", jn)
 
