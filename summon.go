@@ -38,7 +38,7 @@ func summon(db *sql.DB, config *Config) *Summon {
 	}
 }
 
-func (s *Summon) summon() {
+func (s *Summon) summon(locCode string) {
 
 	attendanceDate := time.Now().AddDate(0, 0, s.config.DaysToAdd)
 
@@ -49,8 +49,9 @@ func (s *Summon) summon() {
 		JurorsRequested:  s.config.VotersPerPool,
 		JurorsRequired:   s.config.VotersPerPool,
 		CitizensToSummon: s.config.VotersPerPool,
-		CatchmentArea:    s.config.LocCode[0],
-		Postcodes:        []string{"CH1"},
+		// CatchmentArea:    s.config.LocCode[0],
+		CatchmentArea: locCode,
+		Postcodes:     []string{"CH1"},
 	}
 
 	for _, pool := range poolsToSummon {

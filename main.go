@@ -5,13 +5,15 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/charmbracelet/log"
 )
 
 var (
-	_config string
+	_config        string
+	waitForSummons sync.WaitGroup
 )
 
 type (
@@ -98,8 +100,14 @@ func main() {
 	}
 
 	if config.Summon {
-		s := summon(db.db, &config)
-		s.summon()
+		waitForSummons.Add(1)
+
+		for _, locCode := range config.LocCode {
+			s := summon(db.db, &config)
+			s.summon(locCode)
+		}
+
+		waitForSummons.Wait()
 	}
 
 	// always try to create rooms and judges
@@ -108,5 +116,5 @@ func main() {
 	t.judges()
 	t.createTrials()
 
-  fmt.Printf("\nFinished in: %s\n", time.Since(start))
+	fmt.Printf("\nFinished in: %s\n", time.Since(start))
 }

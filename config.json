@@ -1,14 +1,15 @@
 {
   "reset": true,
-  "location_code": ["415", "462"],
+  "location_code": ["415", "462", "404"],
   "postcodes": {
     "415": "CH1 2AN",
-    "462": "WA1 2AN"
+    "462": "WA1 2AN",
+    "404": "B1 2AN"
   },
   "days_to_add": 0,
-  "pools": 5,
+  "pools": 1,
   "voters": 500,
-  "voters_per_pool": 20,
+  "voters_per_pool": 8,
   "summon": true,
   "add_responses": false,
   "ranges": {
