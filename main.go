@@ -13,6 +13,7 @@ import (
 var (
 	_config        string
 	waitForSummons sync.WaitGroup
+	waitForVoters  sync.WaitGroup
 )
 
 type (
@@ -88,9 +89,12 @@ func main() {
 
 	if config.Voters > 0 {
 		for _, locCode := range config.LocCode {
+			waitForVoters.Add(1)
 			v := voters(db.db, locCode, config.Voters, config.PostCodes[locCode])
-			v.insert()
+			go v.insert()
 		}
+
+		waitForVoters.Wait()
 	}
 
 	if config.Pools > 0 {
