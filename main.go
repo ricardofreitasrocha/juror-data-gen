@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"os"
+	"time"
 
 	"github.com/charmbracelet/log"
 )
@@ -43,6 +45,8 @@ type (
 )
 
 func main() {
+	start := time.Now()
+
 	flag.StringVar(&_config, "c", "", "Use a config file")
 	flag.Parse()
 
@@ -103,4 +107,6 @@ func main() {
 	t.rooms()
 	t.judges()
 	t.createTrials()
+
+  fmt.Printf("\nFinished in: %s\n", time.Since(start))
 }

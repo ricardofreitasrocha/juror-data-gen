@@ -10,7 +10,7 @@
   "voters": 500,
   "voters_per_pool": 20,
   "summon": true,
-  "add_responses": true,
+  "add_responses": false,
   "ranges": {
     "responded": 1.0,
     "excused": 0.0,

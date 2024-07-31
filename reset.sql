@@ -31,6 +31,8 @@ DELETE FROM juror_mod.juror;
 
 delete from juror_mod.voters;
 
+DELETE FROM juror_mod.bureau_snapshot;
+
 --DELETE FROM juror_mod.message;
 --DELETE FROM juror_mod.notify_template_field;
 --DELETE FROM juror_mod.notify_template_mapping;
