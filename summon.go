@@ -5,13 +5,14 @@ import (
 	"encoding/json"
 	"math/rand"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/charmbracelet/log"
 )
 
-var poolsToSummon []string
+var poolsToSummon map[string][]string = make(map[string][]string)
 var waitForResponses sync.WaitGroup
 
 type Summon struct {
@@ -38,7 +39,8 @@ func summon(db *sql.DB, config *Config) *Summon {
 	}
 }
 
-func (s *Summon) summon() {
+func (s *Summon) summon(locCode string) {
+	defer waitForSummons.Done()
 
 	attendanceDate := time.Now().AddDate(0, 0, s.config.DaysToAdd)
 
@@ -49,11 +51,11 @@ func (s *Summon) summon() {
 		JurorsRequested:  s.config.VotersPerPool,
 		JurorsRequired:   s.config.VotersPerPool,
 		CitizensToSummon: s.config.VotersPerPool,
-		CatchmentArea:    s.config.LocCode[0],
-		Postcodes:        []string{"CH1"},
+		CatchmentArea:    locCode,
+		Postcodes:        []string{strings.Split(s.config.PostCodes[locCode], " ")[0]},
 	}
 
-	for _, pool := range poolsToSummon {
+	for _, pool := range poolsToSummon[locCode] {
 		summonPayload.PoolNumber = pool
 
 		log.Infof("Summoning pool: %s", pool)
@@ -61,8 +63,8 @@ func (s *Summon) summon() {
 		payload, _ := json.Marshal(summonPayload)
 		_, err := request("POST", summonVotersUrl.String(), payload, true)
 		if err != nil {
-			log.Errorf("Errored out on summoning pool: %s", err.Error())
-			os.Exit(1)
+			log.Errorf("Errored out on summoning pool (%s): %s", pool, err.Error())
+			// os.Exit(1)
 		}
 
 		log.Debugf("Summoned pool: %s", pool)
@@ -175,8 +177,9 @@ func (s *Summon) addResponses(pool string) {
 		_, err := request("POST", addResponseUrl.String(), payload, true)
 
 		if err != nil {
-			log.Errorf("Errored out on adding response: %s", err.Error())
-			os.Exit(1)
+			log.Errorf("Errored out on adding response (%s): %s", jurorPool.JurorNumber, err.Error())
+			return
+			// os.Exit(1)
 		}
 
 		processResponse(&s.config.Ranges, jurorPool.JurorNumber)

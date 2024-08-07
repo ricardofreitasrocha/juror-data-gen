@@ -70,6 +70,8 @@ func (v *Voters) insert() {
 
 		v.db.Exec(query)
 	}
+
+	waitForVoters.Done()
 }
 
 func jurorNumber(locCode, i string) string {

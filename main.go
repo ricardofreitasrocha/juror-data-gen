@@ -5,13 +5,16 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/charmbracelet/log"
 )
 
 var (
-	_config string
+	_config        string
+	waitForSummons sync.WaitGroup
+	waitForVoters  sync.WaitGroup
 )
 
 type (
@@ -55,13 +58,13 @@ func main() {
 
 	if _config == "" {
 		log.Error("No config file provided")
-		return
+		os.Exit(1)
 	}
 
 	c, err := os.ReadFile(_config)
 	if err != nil {
 		log.Error("Could not read config file")
-		return
+		os.Exit(1)
 	}
 
 	log.Info("Starting the data gen")
@@ -78,18 +81,23 @@ func main() {
 	config := Config{}
 	json.Unmarshal(c, &config)
 
-	if len(config.LocCode[0]) != 3 {
-		log.Error("Location code must be 3 characters")
-		return
+	for _, locCode := range config.LocCode {
+		if len(locCode) != 3 {
+			log.Error("All location codes must be 3 characters")
+			os.Exit(1)
+		}
 	}
 
 	db := New(config.Reset)
 
 	if config.Voters > 0 {
 		for _, locCode := range config.LocCode {
+			waitForVoters.Add(1)
 			v := voters(db.db, locCode, config.Voters, config.PostCodes[locCode])
-			v.insert()
+			go v.insert()
 		}
+
+		waitForVoters.Wait()
 	}
 
 	if config.Pools > 0 {
@@ -98,8 +106,13 @@ func main() {
 	}
 
 	if config.Summon {
-		s := summon(db.db, &config)
-		s.summon()
+		for _, locCode := range config.LocCode {
+			waitForSummons.Add(1)
+			s := summon(db.db, &config)
+			go s.summon(locCode)
+		}
+
+		waitForSummons.Wait()
 	}
 
 	// always try to create rooms and judges
@@ -108,5 +121,5 @@ func main() {
 	t.judges()
 	t.createTrials()
 
-  fmt.Printf("\nFinished in: %s\n", time.Since(start))
+	fmt.Printf("\nFinished in: %s\n", time.Since(start))
 }
