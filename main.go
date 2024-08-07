@@ -103,16 +103,16 @@ func main() {
 	if config.Pools > 0 {
 		p := pools(db.db, &config)
 		p.request()
-	}
 
-	if config.Summon {
-		for _, locCode := range config.LocCode {
-			waitForSummons.Add(1)
-			s := summon(db.db, &config)
-			go s.summon(locCode)
+		if config.Summon {
+			for _, locCode := range config.LocCode {
+				waitForSummons.Add(1)
+				s := summon(db.db, &config)
+				go s.summon(locCode)
+			}
+
+			waitForSummons.Wait()
 		}
-
-		waitForSummons.Wait()
 	}
 
 	// always try to create rooms and judges
