@@ -58,13 +58,13 @@ func main() {
 
 	if _config == "" {
 		log.Error("No config file provided")
-		return
+		os.Exit(1)
 	}
 
 	c, err := os.ReadFile(_config)
 	if err != nil {
 		log.Error("Could not read config file")
-		return
+		os.Exit(1)
 	}
 
 	log.Info("Starting the data gen")
@@ -81,9 +81,11 @@ func main() {
 	config := Config{}
 	json.Unmarshal(c, &config)
 
-	if len(config.LocCode[0]) != 3 {
-		log.Error("Location code must be 3 characters")
-		return
+	for _, locCode := range config.LocCode {
+		if len(locCode) != 3 {
+			log.Error("All location codes must be 3 characters")
+			os.Exit(1)
+		}
 	}
 
 	db := New(config.Reset)
@@ -104,11 +106,10 @@ func main() {
 	}
 
 	if config.Summon {
-		waitForSummons.Add(1)
-
 		for _, locCode := range config.LocCode {
+			waitForSummons.Add(1)
 			s := summon(db.db, &config)
-			s.summon(locCode)
+			go s.summon(locCode)
 		}
 
 		waitForSummons.Wait()

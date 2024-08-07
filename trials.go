@@ -46,8 +46,12 @@ func (t *Trial) judges() {
 
 func (t *Trial) createTrials() {
 	for i := 0; i < t.config.Trials.Total; i++ {
+		trialNumber := fmt.Sprintf("T%d", i+1)
+
 		_, err := t.db.Exec("INSERT INTO juror_mod.trial (trial_number, loc_code, description, courtroom, judge, trial_type, trial_start_date, juror_requested) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-			"T"+fmt.Sprint(i+1), t.config.LocCode[0], "et el", 1, 1, "CRI", "2021-01-01", 10)
+			trialNumber, t.config.LocCode[0], "et el", 1, 1, "CRI", "2021-01-01", 10)
+
+		log.Infof("Creating trial %s", trialNumber)
 
 		if err != nil {
 			log.Errorf("Error inserting trial: %s", err.Error())

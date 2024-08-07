@@ -35,31 +35,33 @@ func pools(db *sql.DB, config *Config) *Pools {
 func (p *Pools) request() {
 	pool := &Pool{}
 
-	for i := 0; i < p.config.Pools; i++ {
-		poolNumber, _ := generatePoolNumber(p.config.LocCode[0])
+	for _, locCode := range p.config.LocCode {
+		for i := 0; i < p.config.Pools; i++ {
+			poolNumber, _ := generatePoolNumber(locCode)
 
-		attendanceDate := time.Now().AddDate(0, 0, p.config.DaysToAdd)
+			attendanceDate := time.Now().AddDate(0, 0, p.config.DaysToAdd)
 
-		pool.PoolNumber = poolNumber
-		pool.CourtCode = p.config.LocCode[0]
-		pool.AttendanceDate = attendanceDate.Format("2006-01-02")
-		pool.AttendanceTime = attendanceDate.Format("15:04")
-		pool.NumberRequested = p.config.VotersPerPool
-		pool.PoolType = poolType()
-		pool.DeferralsUsed = 0
-		pool.CourtOnly = false
+			pool.PoolNumber = poolNumber
+			pool.CourtCode = locCode
+			pool.AttendanceDate = attendanceDate.Format("2006-01-02")
+			pool.AttendanceTime = attendanceDate.Format("15:04")
+			pool.NumberRequested = p.config.VotersPerPool
+			pool.PoolType = poolType()
+			pool.DeferralsUsed = 0
+			pool.CourtOnly = false
 
-		log.Infof("Requesting pool: %s - Pool type: %s", pool.PoolNumber, pool.PoolType)
+			log.Infof("Requesting pool: %s - Pool type: %s", pool.PoolNumber, pool.PoolType)
 
-		payload, _ := json.Marshal(pool)
+			payload, _ := json.Marshal(pool)
 
-		if _, err := request("POST", requestPoolUrl.String(), payload, true); err != nil {
-			log.Error(err)
-			panic("Something went wrong")
-		}
+			if _, err := request("POST", requestPoolUrl.String(), payload, true); err != nil {
+				log.Error(err)
+				panic("Something went wrong")
+			}
 
-		if p.config.Summon {
-			poolsToSummon = append(poolsToSummon, poolNumber)
+			if p.config.Summon {
+				poolsToSummon[locCode] = append(poolsToSummon[locCode], poolNumber)
+			}
 		}
 	}
 }
