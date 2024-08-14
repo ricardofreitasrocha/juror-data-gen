@@ -13,6 +13,7 @@ import (
 
 var (
 	_config        string
+	_transfer      string
 	waitForSummons sync.WaitGroup
 	waitForVoters  sync.WaitGroup
 )
@@ -51,6 +52,7 @@ func main() {
 	start := time.Now()
 
 	flag.StringVar(&_config, "c", "", "Use a config file")
+	flag.StringVar(&_transfer, "t", "", "Transfer pools or jurors")
 	flag.Parse()
 
 	_ = log.New(os.Stderr)
@@ -69,17 +71,20 @@ func main() {
 
 	log.Info("Starting the data gen")
 
-	// TODO: check if response ranges total is 100%
-
 	// do health check
 	// if health check fails, exit
-	if _, err = request("GET", healthCheckUrl.String(), nil, false); err != nil {
+	if _, err := request("GET", healthCheckUrl.String(), nil, false); err != nil {
 		log.Errorf("Errored out on health check: %s", err.Error())
 		os.Exit(1)
 	}
 
 	config := Config{}
 	json.Unmarshal(c, &config)
+
+	if (config.Ranges.Responded + config.Ranges.Excused + config.Ranges.Deferred + config.Ranges.Disqualified + config.Ranges.Undeliverable) != 1.0 {
+		log.Error("Response ranges do not total 100%")
+		os.Exit(1)
+	}
 
 	for _, locCode := range config.LocCode {
 		if len(locCode) != 3 {

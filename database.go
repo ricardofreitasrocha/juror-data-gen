@@ -8,6 +8,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const (
+	TRANSFER_POOLS       = "transfer_pools"
+	TRANSFER_JUROR_POOLS = "transfer_juror_pools"
+)
+
 type Database struct {
 	db *sql.DB
 }
@@ -44,5 +49,14 @@ func reset(db *sql.DB) {
 	if err != nil {
 		log.Errorf("Error resetting database: %s", err.Error())
 		os.Exit(1)
+	}
+}
+
+func (d *Database) call(opts interface{}, args ...string) {
+	if opts == TRANSFER_POOLS {
+		d.db.Exec("call juror_mod.transfer_pool('%s', '%s')", args)
+	}
+	if opts == TRANSFER_JUROR_POOLS {
+		d.db.Exec("call juror_mod.transfer_juror_pool('%s', '%s')", args)
 	}
 }
