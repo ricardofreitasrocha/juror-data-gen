@@ -81,7 +81,7 @@ func main() {
 	config := Config{}
 	json.Unmarshal(c, &config)
 
-	if (config.Ranges.Responded + config.Ranges.Excused + config.Ranges.Deferred + config.Ranges.Disqualified + config.Ranges.Undeliverable) > 1.0 {
+	if (config.Ranges.Responded + config.Ranges.Excused + config.Ranges.Deferred + config.Ranges.Disqualified + config.Ranges.Undeliverable) > 1.01 {
 		log.Error("Response cannot total over 100%")
 		os.Exit(1)
 	}
