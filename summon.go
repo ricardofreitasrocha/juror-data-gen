@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"math/rand"
 	"os"
-	"strings"
 	"sync"
 	"time"
 
@@ -21,15 +20,15 @@ type Summon struct {
 }
 
 type SummonPayload struct {
-	PoolNumber       string   `json:"poolNumber"`
-	StartDate        string   `json:"startDate"`
-	AttendTime       string   `json:"attendTime"`
-	JurorsRequested  int      `json:"noRequested"`
-	BureauDeferrals  int      `json:"bureauDeferrals"`
-	JurorsRequired   int      `json:"numberRequired"`
-	CitizensToSummon int      `json:"citizensToSummon"`
-	CatchmentArea    string   `json:"catchmentArea"`
-	Postcodes        []string `json:"postcodes"`
+	PoolNumber       string `json:"poolNumber"`
+	StartDate        string `json:"startDate"`
+	AttendTime       string `json:"attendTime"`
+	JurorsRequested  int    `json:"noRequested"`
+	BureauDeferrals  int    `json:"bureauDeferrals"`
+	JurorsRequired   int    `json:"numberRequired"`
+	CitizensToSummon int    `json:"citizensToSummon"`
+	CatchmentArea    string `json:"catchmentArea"`
+	Postcodes        string `json:"postcodes"`
 }
 
 func summon(db *sql.DB, config *Config) *Summon {
@@ -48,11 +47,11 @@ func (s *Summon) summon(locCode string) {
 		BureauDeferrals:  0,
 		AttendTime:       attendanceDate.Format("2006-01-02 15:04"),
 		StartDate:        attendanceDate.Format("2006-01-02"),
-		JurorsRequested:  s.config.VotersPerPool,
-		JurorsRequired:   s.config.VotersPerPool,
-		CitizensToSummon: s.config.VotersPerPool,
+		JurorsRequested:  s.config.VotersPerPoolRange,
+		JurorsRequired:   s.config.VotersPerPoolRange,
+		CitizensToSummon: s.config.VotersPerPoolRange,
 		CatchmentArea:    locCode,
-		Postcodes:        []string{strings.Split(s.config.PostCodes[locCode], " ")[0]},
+		Postcodes:        s.config.PostCodes[locCode][0],
 	}
 
 	for _, pool := range poolsToSummon[locCode] {
@@ -64,7 +63,6 @@ func (s *Summon) summon(locCode string) {
 		_, err := request("POST", summonVotersUrl.String(), payload, true)
 		if err != nil {
 			log.Errorf("Errored out on summoning pool (%s): %s", pool, err.Error())
-			// os.Exit(1)
 		}
 
 		log.Debugf("Summoned pool: %s", pool)

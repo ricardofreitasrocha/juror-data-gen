@@ -45,6 +45,7 @@ DELETE FROM juror_mod.bureau_snapshot;
 --DELETE FROM juror_mod.user_courts;
 --DELETE FROM juror_mod.users;
 
+delete from juror_mod.juror_third_party_audit;
 delete from juror_mod.users_audit;
 DELETE FROM juror_mod.rev_info;
 --DELETE FROM JUROR_DIGITAL.STAFF_AUDIT;

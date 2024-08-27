@@ -45,7 +45,7 @@ func (p *Pools) request() {
 			pool.CourtCode = locCode
 			pool.AttendanceDate = attendanceDate.Format("2006-01-02")
 			pool.AttendanceTime = attendanceDate.Format("15:04")
-			pool.NumberRequested = p.config.VotersPerPool
+			pool.NumberRequested = numberRequested(p.config.VotersPerPoolRange)
 			pool.PoolType = poolType()
 			pool.DeferralsUsed = 0
 			pool.CourtOnly = false
@@ -79,4 +79,9 @@ func poolType() string {
 	}
 
 	return ""
+}
+
+func numberRequested(votersRange int) int {
+	return votersRange
+	// return rand.Intn(votersRange) + 1
 }

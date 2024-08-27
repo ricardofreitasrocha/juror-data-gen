@@ -34,17 +34,17 @@ type (
 	}
 
 	Config struct {
-		LocCode       []string          `json:"location_code"`
-		PostCodes     map[string]string `json:"postcodes"`
-		Pools         int               `json:"pools"`
-		Voters        int               `json:"voters"`
-		Reset         bool              `json:"reset"`
-		VotersPerPool int               `json:"voters_per_pool"`
-		Summon        bool              `json:"summon"`
-		AddResponses  bool              `json:"add_responses"`
-		DaysToAdd     int               `json:"days_to_add"`
-		Ranges        Ranges            `json:"ranges"`
-		Trials        Trials            `json:"trials"`
+		LocCode            []string            `json:"location_code"`
+		PostCodes          map[string][]string `json:"postcodes"`
+		Pools              int                 `json:"pools"`
+		Voters             int                 `json:"voters"`
+		Reset              bool                `json:"reset"`
+		VotersPerPoolRange int                 `json:"voters_per_pool_range"`
+		Summon             bool                `json:"summon"`
+		AddResponses       bool                `json:"add_responses"`
+		DaysToAdd          int                 `json:"days_to_add"`
+		Ranges             Ranges              `json:"ranges"`
+		Trials             Trials              `json:"trials"`
 	}
 )
 
@@ -81,7 +81,7 @@ func main() {
 	config := Config{}
 	json.Unmarshal(c, &config)
 
-	if (config.Ranges.Responded + config.Ranges.Excused + config.Ranges.Deferred + config.Ranges.Disqualified + config.Ranges.Undeliverable) > 1.0 {
+	if (config.Ranges.Responded + config.Ranges.Excused + config.Ranges.Deferred + config.Ranges.Disqualified + config.Ranges.Undeliverable) > 1.01 {
 		log.Error("Response cannot total over 100%")
 		os.Exit(1)
 	}
